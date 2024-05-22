@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: dbname
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "5432:5432"
+    networks: 
+        - api-network
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks: 
+        - api-network
+
+volumes:
+  mariadb_data:
+
+networks:
+  api-network:
+    driver: bridge
